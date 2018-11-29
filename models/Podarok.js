@@ -21,6 +21,10 @@ const PodarokSchema = new Schema({
     type: String,
     required: true,
   },
+  occasion: {
+    type: String,
+    required: true,
+  },
   name: {
     type: String,
   },

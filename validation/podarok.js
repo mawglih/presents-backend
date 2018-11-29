@@ -8,6 +8,7 @@ module.exports = function validatePodarokInput(data) {
   data.title = !isEmpty(data.title) ? data.title : '';
   data.image = !isEmpty(data.image) ? data.image : '';
   data.url = !isEmpty(data.url) ? data.url : '';
+  data.occasion = !isEmpty(data.occasion) ? data.occasion : '';
 
   if(!Validator.isURL(data.url)) {
     errors.urll = 'URL is invalid';
@@ -20,6 +21,10 @@ module.exports = function validatePodarokInput(data) {
 
   if(Validator.isEmpty(data.image)) {
     errors.image = 'Image field is required';
+  }
+
+  if(Validator.isEmpty(data.occasion)) {
+    errors.occasion = 'You must select occasion';
   }
 
   if(Validator.isEmpty(data.url)) {
