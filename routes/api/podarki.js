@@ -39,7 +39,7 @@ router.post('/', passport.authenticate('jwt', { session: false }), (req, res) =>
     image: req.body.image,
     description: req.body.description,
     url: req.body.url,
-    occasionr: req.body.occasionr,
+    occasion: req.body.occasion,
     name: req.body.name,
     avatar: req.body.avatar,
     user: req.user.id,
