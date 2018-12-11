@@ -14,6 +14,9 @@ const PodarokSchema = new Schema({
     type: String,
     required: true,
   },
+  price: {
+    type: Number,
+  },
   description: {
     type: String,
   },

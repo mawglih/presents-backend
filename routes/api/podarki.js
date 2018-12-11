@@ -37,6 +37,7 @@ router.post('/', passport.authenticate('jwt', { session: false }), (req, res) =>
   const newPodarok = new Podarok({
     title: req.body.title,
     image: req.body.image,
+    price: req.body.price,
     description: req.body.description,
     url: req.body.url,
     occasion: req.body.occasion,
