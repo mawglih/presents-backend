@@ -17,10 +17,6 @@ module.exports = function validateProfileInput(data) {
     errors.handle = 'Handle is required';
   }
 
-  if(Validator.isEmpty(data.status)) {
-    errors.status = 'Status is required';
-  }
-
   if(Validator.isEmpty(data.skills)) {
     errors.skills = 'Skills is required field';
   }
