@@ -83,6 +83,7 @@ router.post('/', passport.authenticate('jwt', { session: false}), (req, res) => 
   if(typeof req.body.skills !== 'undefined') {
     profileFields.skills = req.body.skills.split(',');
   }
+  if(req.body.skillLevel) profileFields.skillLevel = req.body.skillLevel;
   profileFields.social = {};
   if(req.body.youtube) profileFields.social.youtube = req.body.youtube;
   if(req.body.facebooke) profileFields.social.facebooke = req.body.facebooke;
