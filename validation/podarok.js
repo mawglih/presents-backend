@@ -31,9 +31,9 @@ module.exports = function validatePodarokInput(data) {
     errors.url = 'URL field is required';
   }
 
-  if(Validator.isLength(data.description, {min: 10, max: 400 })) {
-    errors.description = 'Description must be between 10 and 400 charachters';
-  }
+  // if(Validator.isLength(data.description, {min: 10, max: 400 })) {
+  //   errors.description = 'Description must be between 10 and 400 charachters';
+  // }
 
   return {
     errors,

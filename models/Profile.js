@@ -29,38 +29,28 @@ const ProfileSchema = new Schema({
   },
   skillLevel: {
     type: String,
-  }
+  },
   bio: {
     type: String,
   },
   githubusername: {
     type: String,
   },
-  experience: [
+  occasions: [
     {
       title: {
         type: String,
         required: true,
       },
-      company: {
-        type: String,
-        required: true,
-      },
-      location: {
-        type: String,
-      },
-      from: {
+      at: {
         type: Date,
         required: true,
       },
-      to: {
-        type: Date,
-      },
-      current: {
+      special: {
         type: Boolean,
         default: false,
       },
-      descriptrion: {
+      description: {
         type: String,
       },
     },

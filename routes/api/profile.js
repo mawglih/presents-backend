@@ -7,7 +7,7 @@ const Profile = require('../../models/Profile');
 const User = require('../../models/User');
 
 const validateProfileInput = require('../../validation/profile');
-const validateExperienceInput = require('../../validation/experience');
+const validateOccasionsInput = require('../../validation/occasions');
 const validateEducationInput = require('../../validation/education');
 
 router.get('/test', (req, res) => res.json({ msg: "profile works"}));
@@ -114,27 +114,24 @@ router.post('/', passport.authenticate('jwt', { session: false}), (req, res) => 
     })
 });
 
-// education and experience
+// occasions and experience
 
-router.post('/experince', passport.authenticate('jwt', { session: false}), (req, res) => {
-  const { errors, isValid } = validateExperienceInput(req.body);
+router.post('/occasions', passport.authenticate('jwt', { session: false}), (req, res) => {
+  const { errors, isValid } = validateOccasionsInput(req.body);
   // chaeck if valid
   if(!isValid) {
     return res.status(400).json(errors);
   }
   Profile.findOne({ user: req.user.id })
     .then(profile => {
-      const newExp = {
+      const newOccasion = {
         title: req.body.title,
-        company: req.body.company,
-        location: req.body.location,
-        from: req.body.from,
-        to: req.body.to,
-        current: req.body.current,
+        at: req.body.at,
+        special: req.body.special,
         description: req.body.description,
       }
       // add to array
-      profile.experience.unshift(newExp);
+      profile.occasions.unshift(newOccasion);
       profile.save().then(profile => res.json(profile));
     })
 });
