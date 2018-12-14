@@ -136,18 +136,19 @@ router.post('/occasions', passport.authenticate('jwt', { session: false}), (req,
     })
 });
 
-router.get('occasion/:occ_id', passport.authenticate('jwt', { session:false}), (req, res) => {
-  Profile.findOne({ user: req.user.id })
-    .then(profile => {
-      if(profile) {
-        Profile.findOne({occasion: req.occasion.id})
-          .then(occ => res.json(occ))
-      }
-    })
-    .catch(err => res.status(404).json({ occasion: 'There is no occasion by that id' }));
+router.get('/occasions/:id', passport.authenticate('jwt', { session:false}), (req, res) => {
+  Profile.findOne({ _id: req.params.id})
+    .then(result => res.json(result))
+    .catch(err => res.status(404).json(err));
 });
+// app.get('/collections/:collectionName/:id', function(req, res) {
+//   req.collection.findOne({_id: req.collection.id(req.params.id)}, function(e, result){
+//     if (e) return next(e)
+//     res.send(result)
+//   })
+// })
 
-router.put('occasion/:occ_id', passport.authenticate('jwt', { session:false}), (req, res) => {
+router.put('/occasions/:occ_id', passport.authenticate('jwt', { session:false}), (req, res) => {
   const occasionFields = {};
   if(req.body.title) occasionFields.title = req.body.title;
   if(req.body.description) occasionFields.description = req.body.description;
@@ -157,7 +158,7 @@ router.put('occasion/:occ_id', passport.authenticate('jwt', { session:false}), (
     .then(profile => {
       if(profile) {
         Profile.findOneAndUpdate(
-          { occasion: req.occasion.id },
+          { occasion: req.occasions.occ_id },
           { $set: occasionFields },
           { new: true },
           )
