@@ -62,7 +62,7 @@ router.get('/all', (req, res) => {
       }
       res.json(profiles);
     })
-    .catch(err => res.status(404).json({ profoles: 'Thire are no profiles' }));
+    .catch(err => res.status(404).json({ profiles: 'Thire are no profiles' }));
 })
 
 router.post('/', passport.authenticate('jwt', { session: false}), (req, res) => {
@@ -136,9 +136,42 @@ router.post('/occasions', passport.authenticate('jwt', { session: false}), (req,
     })
 });
 
+router.get('occasion/:occ_id', passport.authenticate('jwt', { session:false}), (req, res) => {
+  Profile.findOne({ user: req.user.id })
+    .then(profile => {
+      if(profile) {
+        Profile.findOne({occasion: req.occasion.id})
+          .then(occ => res.json(occ))
+      }
+    })
+    .catch(err => res.status(404).json({ occasion: 'There is no occasion by that id' }));
+});
+
+router.put('occasion/:occ_id', passport.authenticate('jwt', { session:false}), (req, res) => {
+  const occasionFields = {};
+  if(req.body.title) occasionFields.title = req.body.title;
+  if(req.body.description) occasionFields.description = req.body.description;
+  if(req.body.at) occasionFields.at = req.body.at;
+  if(req.body.special) occasionFields.special = req.body.special;
+  Profile.findOne({user: req.user.id})
+    .then(profile => {
+      if(profile) {
+        Profile.findOneAndUpdate(
+          { occasion: req.occasion.id },
+          { $set: occasionFields },
+          { new: true },
+          )
+          .then(profile => res.json(profile));
+      } else {
+        errors.occasion = 'That occasion does not exist';
+        res.status(400).json(errors);
+      }
+  })
+});
+
 router.post('/education', passport.authenticate('jwt', { session: false}), (req, res) => {
   const { errors, isValid } = validateEducationInput(req.body);
-  // chaeck if valid
+  // check if valid
   if(!isValid) {
     return res.status(400).json(errors);
   }
