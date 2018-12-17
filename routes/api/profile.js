@@ -136,19 +136,23 @@ router.post('/occasions', passport.authenticate('jwt', { session: false}), (req,
     })
 });
 
-router.get('/occasions/:id', passport.authenticate('jwt', { session:false}), (req, res) => {
-  Profile.findOne({ _id: req.params.id})
-    .then(result => res.json(result))
-    .catch(err => res.status(404).json(err));
+router.get('/occasions/:id', passport.authenticate('jwt', { session: false}), (req, res) => {
+  console.log(req.params.id);
+  Profile.findOne({ user: req.user.id })
+    .then(profile => {
+      const occ = profile.occasions
+        .find(item => {
+          if(item._id.toString() === req.params.id) {
+            console.log(item._id);
+            return item;
+          }
+        });
+        res.json(occ);
+      })
+      .catch(err => res.status(404).json("no profile found"));
 });
-// app.get('/collections/:collectionName/:id', function(req, res) {
-//   req.collection.findOne({_id: req.collection.id(req.params.id)}, function(e, result){
-//     if (e) return next(e)
-//     res.send(result)
-//   })
-// })
 
-router.put('/occasions/:occ_id', passport.authenticate('jwt', { session:false}), (req, res) => {
+router.put('/occasions/:id', passport.authenticate('jwt', { session:false}), (req, res) => {
   const occasionFields = {};
   if(req.body.title) occasionFields.title = req.body.title;
   if(req.body.description) occasionFields.description = req.body.description;
@@ -157,12 +161,11 @@ router.put('/occasions/:occ_id', passport.authenticate('jwt', { session:false}),
   Profile.findOne({user: req.user.id})
     .then(profile => {
       if(profile) {
-        Profile.findOneAndUpdate(
-          { occasion: req.occasions.occ_id },
-          { $set: occasionFields },
-          { new: true },
-          )
-          .then(profile => res.json(profile));
+        const findIndex = profile.occasions
+        .map(item => item.id)
+        .indexOf(req.params.id);
+      profile.occasions.splice(findIndex, 1, occasionFields);
+      profile.save().then(profile => res.json(profile));
       } else {
         errors.occasion = 'That occasion does not exist';
         res.status(400).json(errors);
@@ -194,13 +197,13 @@ router.post('/education', passport.authenticate('jwt', { session: false}), (req,
 });
 
 
-router.delete('/experince/:exp_id', passport.authenticate('jwt', { session: false}), (req, res) => {
+router.delete('/occasions/:occ_id', passport.authenticate('jwt', { session: false}), (req, res) => {
   Profile.findOne({ user: req.user.id })
     .then(profile => {
-      const removeIndex = profile.experience
+      const removeIndex = profile.occasions
         .map(item => item.id)
-        .indexOf(req.params.exp_id);
-      profile.experience.splice(removeIndex, 1);
+        .indexOf(req.params.occ_id);
+      profile.occasions.splice(removeIndex, 1);
       profile.save().then(profile => res.json(profile));
     })
     .catch(err => res.status(404).json(err));
