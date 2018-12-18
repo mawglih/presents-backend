@@ -33,8 +33,10 @@ router.get('/user/:user_id', (req, res) => {
     .then(podarok => {
       if(!podarok) {
         errors.nopodarok = 'This user does not have any presents yet';
+        console.log(errors);
         res.status(403).json(errors);
       }
+      console.log(podarok);
       res.json(podarok);
     })
     .catch(err => res.status(400).json({ podarok : 'cannot find user'}));
