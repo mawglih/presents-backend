@@ -174,6 +174,18 @@ router.put('/occasions/:id', passport.authenticate('jwt', { session:false}), (re
   })
 });
 
+router.delete('/occasions/:occ_id', passport.authenticate('jwt', { session: false}), (req, res) => {
+  Profile.findOne({ user: req.user.id })
+    .then(profile => {
+      const removeIndex = profile.occasions
+        .map(item => item.id)
+        .indexOf(req.params.occ_id);
+      profile.occasions.splice(removeIndex, 1);
+      profile.save().then(profile => res.json(profile));
+    })
+    .catch(err => res.status(404).json(err));
+});
+
 router.post('/education', passport.authenticate('jwt', { session: false}), (req, res) => {
   const { errors, isValid } = validateEducationInput(req.body);
   // check if valid
@@ -195,19 +207,6 @@ router.post('/education', passport.authenticate('jwt', { session: false}), (req,
       profile.education.unshift(newEdu);
       profile.save().then(profile => res.json(profile));
     })
-});
-
-
-router.delete('/occasions/:occ_id', passport.authenticate('jwt', { session: false}), (req, res) => {
-  Profile.findOne({ user: req.user.id })
-    .then(profile => {
-      const removeIndex = profile.occasions
-        .map(item => item.id)
-        .indexOf(req.params.occ_id);
-      profile.occasions.splice(removeIndex, 1);
-      profile.save().then(profile => res.json(profile));
-    })
-    .catch(err => res.status(404).json(err));
 });
 
 router.delete('/education/:edu_id', passport.authenticate('jwt', { session: false}), (req, res) => {
